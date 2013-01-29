@@ -1,0 +1,12 @@
+{
+  "name": "icon-creator",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node icon-creator"
+  },
+  "dependencies": {
+    "coffee-script": "latest"
+    , "canvas": "*"
+  }
+}

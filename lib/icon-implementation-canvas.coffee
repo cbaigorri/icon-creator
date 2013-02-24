@@ -14,9 +14,6 @@ exports.IconImplementation = IconImplementation = ()->
 
 IconImplementation.prototype = 
 
-  init: ()->
-    @
-
   readFile: (src, callback)->
     fs.readFile src, (err, icon) ->
       if (err) then throw err

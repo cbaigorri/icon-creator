@@ -8,5 +8,6 @@
   "dependencies": {
     "coffee-script": "latest"
     , "canvas": "*"
+    , "imagemagick": "*"
   }
 }

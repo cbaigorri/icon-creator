@@ -2,7 +2,7 @@
 IconProxy
 ###
 
-IconImplementation = require(__dirname + '/icon-implementation-canvas').IconImplementation
+IconImplementation = require(__dirname + '/icon-implementation-imagemagick').IconImplementation
 
 exports.IconProxy = IconProxy = ()->
   # creation
@@ -13,7 +13,6 @@ exports.IconProxy = IconProxy = ()->
 IconProxy.prototype = 
 
   init: ()->
-    console.log process.argv
     if process.argv.length > 2
       @iconSource = process.argv[2]
       iconDir = @iconSource.substring 0, @iconSource.lastIndexOf('/')
@@ -32,8 +31,13 @@ IconProxy.prototype =
     @
 
   readFile: ()->
+    @impl.readFile @iconSource, [{w:144, h:144}, {w:114, h:114}, {w:72, h:72}, {w:57, h:57}]
+
+    ###
+    # Canvas implementation
     impl = @impl
     impl.readFile @iconSource, (img, oIconCanvas) ->
       impl.drawIcon i, img, oIconCanvas for i in [{w:144, h:144}, {w:114, h:114}, {w:72, h:72}, {w:57, h:57}]
+    ###
     @
   

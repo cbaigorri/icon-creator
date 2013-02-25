@@ -1,26 +1,18 @@
 ###
-TODO: add node-imagemagick implementation
-      
+Icon Creator
 ###
 
 
-###
-Module Dependencies
-###
+# Dependencies
 
 IconProxy = require(__dirname + '/lib/icon-proxy').IconProxy
 
-###
-Check for icon
-###
+# Initialize
 
 icon = new IconProxy()
 icon.init()
 
 
-###
-Read the original icon
-###
+# Read the original icon
 
 icon.readFile()
-

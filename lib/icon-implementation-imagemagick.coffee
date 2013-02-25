@@ -3,7 +3,6 @@ IconImplementation
 ###
 
 im = require 'imagemagick'
-fs = require 'fs'
 
 exports.IconImplementation = IconImplementation = ()->
   # creation

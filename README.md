@@ -7,19 +7,19 @@ Node.js utility to create icons for your site
 node icon-creator.js /path/to/original/icon.png
 
 Outputs:
-/path/to/original/icon57x57.png
-/path/to/original/icon72x72.png
-/path/to/original/icon114x114.png
-/path/to/original/icon144x144.png
+* /path/to/original/icon57x57.png
+* /path/to/original/icon72x72.png
+* /path/to/original/icon114x114.png
+* /path/to/original/icon144x144.png
 
 
 node icon-creator.js /path/to/original/icon.png icon-
 
 Outputs:
-/path/to/original/icon-57x57.png
-/path/to/original/icon-72x72.png
-/path/to/original/icon-114x114.png
-/path/to/original/icon-144x144.png
+* /path/to/original/icon-57x57.png
+* /path/to/original/icon-72x72.png
+* /path/to/original/icon-114x114.png
+* /path/to/original/icon-144x144.png
 
 ## Changelog
 

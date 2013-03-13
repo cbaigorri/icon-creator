@@ -31,7 +31,7 @@ IconProxy.prototype =
     @
 
   readFile: ()->
-    @impl.readFile @iconSource, [{w:144, h:144}, {w:114, h:114}, {w:72, h:72}, {w:57, h:57}]
+    @impl.readFile @iconSource, [{w:144, h:144}, {w:114, h:114}, {w:72, h:72}, {w:57, h:57}, {w:16, h:16}]
 
     ###
     # Canvas implementation

@@ -9,5 +9,8 @@
     "coffee-script": "latest"
     , "canvas": "*"
     , "imagemagick": "*"
+    , "mocha": "*"
+    , "should": "*"
+    , "chai": "*"
   }
 }

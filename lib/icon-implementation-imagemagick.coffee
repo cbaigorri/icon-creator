@@ -4,10 +4,10 @@ IconImplementation
 
 im = require 'imagemagick'
 
-exports.IconImplementation = IconImplementation = ()->
+exports.IconImplementation = IconImplementation = (iconDir, iconName)->
   # creation
-  @iconDir = ''
-  @iconName = ''
+  @iconDir = iconDir
+  @iconName = iconName
   @
 
 IconImplementation.prototype = 

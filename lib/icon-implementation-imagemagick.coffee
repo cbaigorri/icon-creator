@@ -10,16 +10,16 @@ exports.IconImplementation = IconImplementation = (iconDir, iconName)->
   @iconName = iconName
   @
 
-IconImplementation.prototype = 
+IconImplementation.prototype =
 
   readFile: (src, imgs) ->
     @drawIcon src, i for i in imgs
     @
-  
+
   drawIcon: (src, i) ->
     start = new Date
     fileType = src.substring(src.lastIndexOf('.') + 1, src.length)
-    args = 
+    args =
       srcPath: src
       dstPath: @iconDir + '/' + @iconName + '' + i.w + 'x' + i.h + '.png'
       width: i.w
@@ -30,6 +30,8 @@ IconImplementation.prototype =
       args.format = 'ico'
       args.dstPath = @iconDir + '/' + @iconName + '' + i.w + 'x' + i.h + '.ico'
     im.resize args, (err, stdout, stderr) ->
-      if (err) then throw err
+      if (err) then console.log err
+      if (stderr) then console.log stderr
+      if (stdout) then console.log stdout
       console.log 'Resized and saved in %dms', new Date - start
     @

@@ -1,0 +1,24 @@
+extend layout
+block content
+  - var m = messages;
+  - var _len = m.length;
+  - if (_len > 0) {
+    .container
+      .row
+        .col-md-12
+          .alert.alert-danger
+            strong Errors
+            ul
+              - for (var i =0; i < _len; i++) {
+                li!=m[i]
+              - }
+
+    - for (var i =0; i < _len; i++) messages.pop()
+  - }
+  .container
+    form#icon-form(method="post", action="/?_csrf="+token, enctype="multipart/form-data")
+      .form-group
+        label(for="iconInputFile")
+        input#iconInputFile(type="file", name="icon-file")
+        p.help-block Upload your file here
+      button.btn.btn-primary(type="submit") Submit

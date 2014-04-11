@@ -112,6 +112,8 @@ class IconCreator
             rimraf path.join(uploadsDir, file), (err)->
               return console.error err if err
               console.log 'successfully deleted'
+              return
+          return
 
   ###
   Cron

@@ -3,6 +3,8 @@ _ = require 'underscore'
 multipart = require 'connect-multiparty'
 fs = require 'fs'
 uuid = require 'node-uuid'
+path = require 'path'
+AdmZip = require('adm-zip')
 
 # Dependencies
 
@@ -52,14 +54,17 @@ module.exports = (app)->
             # icon.init source: newPath, name:(process.argv[3] || '')
             icon.init source: newPath, name: ''
 
-            icon.readFile()
-
-            res.redirect '/'
-      console.log 'saveFile'
-      return
+            # all files have been saved
+            icon.readFile (icons)->
+              createZip(newFolderPath, icons)
+              res.redirect '/'
+            return
+          return
+        return
 
     res.redirect '/'
     return
+  return
 
 isValidFileSize = (fileSize)->
   return if fileSize < validFileSizeUpper && fileSize > 0 then true else false
@@ -70,5 +75,12 @@ isValidFileType = (fileType)->
     pass = true if item == fileType
   pass
 
-
-
+createZip = (folderPath, icons)->
+  zip = new AdmZip()
+  i = 0
+  folderPath = path.normalize(folderPath)
+  while i < icons.length
+    zip.addLocalFile path.normalize(icons[i])
+    i++
+  zip.writeZip path.join(folderPath, 'website-icons.zip')
+  return

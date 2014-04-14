@@ -10,6 +10,7 @@ path = require 'path'
 fs = require 'fs'
 rimraf = require 'rimraf'
 CronJob = require('cron').CronJob
+EasyZip = require('easy-zip').EasyZip;
 
 class IconCreator
 
@@ -116,6 +117,16 @@ class IconCreator
           return
 
   ###
+  Create Zip
+  ###
+  createZip: ()->
+    zip = new EasyZip()
+    iconFolder = zip2.folder('js')
+    iconFolder.file('hello.js','alert("hello world")')
+    zip.writeToFile('folder.zip')
+
+
+  ###
   Cron
   ###
   initializeCronJobs: ()->
@@ -133,3 +144,11 @@ ic = new IconCreator()
 ic.initialize()
 
 return
+
+zip = new EasyZip()
+# zip.file 'hello.txt','Hello World'
+zip.zipFolder path.join(__dirname,'uploads','ea8bafa8-b9d9-4c7a-a433-810bc19c9bfc'), (()->
+  console.log 'DONE DONE DONE'
+  zip.writeToFile path.join(__dirname,'test-2.zip')
+),
+  rootFolder: 'easy-zip6'

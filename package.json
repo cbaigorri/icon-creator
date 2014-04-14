@@ -31,6 +31,7 @@
     "underscore": "^1.6.0",
     "node-uuid": "^1.4.1",
     "cron": "^1.0.4",
-    "rimraf": "^2.2.6"
+    "rimraf": "^2.2.6",
+    "adm-zip": "^0.4.4"
   }
 }

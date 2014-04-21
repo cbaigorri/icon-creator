@@ -5,6 +5,7 @@ html(class='no-js', lang='en')
     meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
     title #{title} - Home
     meta(name='description', content='')
+    meta(name='keywords', content='free apple icon generator, free apple icon creator, free online icon generator, free online icon creator, free online favicon generator, free online favicon creator, free icon generator')
     meta(name='author', content='Chris Baigorri')
     meta(name='viewport', content='width=device-width,initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
@@ -12,10 +13,25 @@ html(class='no-js', lang='en')
     nav.navbar.navbar-default
       .container
         .navbar-header
-          a.navbar-brand(href="/") Icon Creator
+          a.navbar-brand(href="/")
+            strong Icon Creator
+        .social-share.pull-right
+          // AddThis Button BEGIN
+          .addthis_toolbox.addthis_default_style.addthis_32x32_style
+            a.addthis_button_facebook
+            a.addthis_button_twitter
+            a.addthis_button_pinterest_share
+            a.addthis_button_google_plusone_share
+            a.addthis_button_compact
+            a.addthis_counter.addthis_bubble_style
+          script.
+            var addthis_config = {"data_track_addressbar":true}
+          script(type="text/javascript", src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51d854442dd2f390")
+          // AddThis Button END
 
     section#content.content
       block content
+
     include includes/footer
 
     script(src="/js/client.js")

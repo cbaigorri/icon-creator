@@ -1,9 +1,11 @@
 extend layout
 block content
-  - var m = messages;
-  - var _len = m.length;
-  - if (_len > 0) {
-    .container
+
+  .container
+
+    - var m = messages;
+    - var _len = m.length;
+    - if (_len > 0) {
       .row
         .col-md-12
           .alert.alert-danger
@@ -13,12 +15,111 @@ block content
                 li!=m[i]
               - }
 
-    - for (var i =0; i < _len; i++) messages.pop()
-  - }
-  .container
-    form#icon-form(method="post", action="/?_csrf="+token, enctype="multipart/form-data")
-      .form-group
-        label(for="iconInputFile")
-        input#iconInputFile(type="file", name="icon-file")
-        p.help-block Upload your file here
-      button.btn.btn-primary(type="submit") Submit
+      - for (var i =0; i < _len; i++) messages.pop()
+    - }
+
+    .row.row-content
+      .col-md-12.col-content
+
+        section.section-heading
+          h1 Generate icons for your website or apps
+          p.lead Lorem ipsum
+
+        section.section-container.form-container
+          .panel.panel-default
+            .panel-heading Panel heading without title
+            .panel-body
+              form#icon-form.form-horizontal(method="post", action="/?_csrf="+token, enctype="multipart/form-data")
+                .form-group
+                  input#uploadFile(placeholder="Choose File", disabled="disabled")
+                  .fileUpload.btn.btn-primary
+                    span Upload
+                    input#iconInputFile.upload(type="file")
+                  p.help-block Upload a JPG, PNG or GIF image (up to 5MB).
+
+                  //- label(for="iconInputFile")
+                  //- input#iconInputFile(type="file", name="icon-file")
+                  //- p.help-block Upload a square JPG, PNG or GIF image (up to 500KB).
+                button.btn.btn-primary(type="submit") Submit
+
+        - if (iconToken) {
+          section.preview-container
+            ul.list-unstyled.list-inline.icons-list
+              li
+                a(href='/uploads/'+iconToken+'/website-icons.zip')
+                  i.fa.fa-archive
+                  span website-icons.zip
+              li
+                a(href='/uploads/'+iconToken+'/favicon.ico')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/favicon.ico')
+                  span favicon.ico
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon.png')
+                  span apple-touch-icon.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-72x72-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-72x72-precomposed.png')
+                  span apple-touch-icon-72x72-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-76x76-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-76x76-precomposed.png')
+                  span apple-touch-icon-76x76-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-114x114-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-114x114-precomposed.png')
+                  span apple-touch-icon-114x114-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-120x120-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-120x120-precomposed.png')
+                  span apple-touch-icon-120x120-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-144x144-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-144x144-precomposed.png')
+                  span apple-touch-icon-144x144-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/apple-touch-icon-152x152-precomposed.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/apple-touch-icon-152x152-precomposed.png')
+                  span apple-touch-icon-152x152-precomposed.png
+              li
+                a(href='/uploads/'+iconToken+'/smalltile.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/smalltile.png')
+                  span smalltile.png
+              li
+                a(href='/uploads/'+iconToken+'/mediumtile.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/mediumtile.png')
+                  span mediumtile.png
+              li
+                a(href='/uploads/'+iconToken+'/widetile.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/widetile.png')
+                  span widetile.png
+              li
+                a(href='/uploads/'+iconToken+'/largetile.png')
+                  img.img-thumbnail(src='/uploads/'+iconToken+'/largetile.png')
+                  span largetile.png
+              li
+              li
+              li
+        - }
+
+        - if (iconToken) {
+          section.code-container
+            pre
+              code.
+                &lt;link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="76x76" href="/apple-touch-icon-76x76-precomposed.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="120x120" href="/apple-touch-icon-120x120-precomposed.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144x144-precomposed.png" /&gt;
+                &lt;link rel="apple-touch-icon-precomposed" sizes="152x152" href="/apple-touch-icon-152x152-precomposed.png" /&gt;
+                &lt;meta name="msapplication-square70x70logo" content="smalltile.png" /&gt;
+                &lt;meta name="msapplication-square150x150logo" content="/mediumtile.png" /&gt;
+                &lt;meta name="msapplication-wide310x150logo" content="/widetile.png" /&gt;
+                &lt;meta name="msapplication-square310x310logo" content="/largetile.png" /&gt;
+        - }
+
+      .col-ad skyscraper ad
+
+

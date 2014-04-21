@@ -5,6 +5,7 @@ fs = require 'fs'
 uuid = require 'node-uuid'
 path = require 'path'
 AdmZip = require('adm-zip')
+archiver = require 'archiver'
 
 # Dependencies
 
@@ -15,6 +16,7 @@ validFileSizeUpper = 5242880
 validFileTypes = ['image/jpeg','image/jpg','image/png','image/gif']
 
 module.exports = (app)->
+
   # Homepage
   app.get '/', (req, res) ->
     console.log req.session.messages
@@ -22,6 +24,7 @@ module.exports = (app)->
       title: "Home"
       messages: req.session.messages
       token: req.csrfToken()
+      iconToken: req.query['icon-token'] || undefined
 
   app.post '/', multipart(), (req, res, next)->
     iconFile = req.files['icon-file']
@@ -40,7 +43,8 @@ module.exports = (app)->
     if validType && validSize
       # read the uploaded file
       fs.readFile iconFile.path, (err, data)->
-        newFolderPath = __dirname + '/../uploads/' + uuid.v4()
+        folderId = uuid.v4()
+        newFolderPath = __dirname + '/../uploads/' + folderId
         newPath = newFolderPath + '/' + iconFile.originalFilename
         # create a new folder
         fs.mkdir newFolderPath, '0755', ()->
@@ -56,13 +60,23 @@ module.exports = (app)->
 
             # all files have been saved
             icon.readFile (icons)->
-              createZip(newFolderPath, icons)
-              res.redirect '/'
+
+              # create favicon
+              icon.createFavicon newFolderPath, icons, (err)->
+                return console.error err if err
+                # remove unused files
+                removeUnusedFiles newFolderPath, ()->
+                  console.log 'back from removing old files'
+                # create zip
+                createZip(newFolderPath, icons)
+                # redirect
+                res.redirect '/?icon-token='+folderId
+
             return
           return
         return
-
-    res.redirect '/'
+    else
+      res.redirect '/'
     return
   return
 
@@ -76,11 +90,61 @@ isValidFileType = (fileType)->
   pass
 
 createZip = (folderPath, icons)->
+  filesToZip = ['apple-touch-icon-72x72-precomposed.png', 'apple-touch-icon-76x76-precomposed.png', 'apple-touch-icon-114x114-precomposed.png', 'apple-touch-icon-120x120-precomposed.png', 'apple-touch-icon-144x144-precomposed.png', 'apple-touch-icon-152x152-precomposed.png', 'apple-touch-icon.png', 'favicon.ico', 'largetile.png', 'mediumtile.png', 'smalltile.png', 'widetile.png']
+  # filesToZip = ['apple-touch-icon-72x72-precomposed.png', 'apple-touch-icon-76x76-precomposed.png', 'apple-touch-icon-114x114-precomposed.png', 'apple-touch-icon-120x120-precomposed.png', 'apple-touch-icon-144x144-precomposed.png', 'apple-touch-icon-152x152-precomposed.png', 'apple-touch-icon.png', 'favicon.ico', 'largetile.png', 'mediumtile.png', 'smalltile.png', 'widetile.png']
+  # filesToZip = ['apple-touch-icon-72x72-precomposed.png', 'apple-touch-icon-76x76-precomposed.png', 'apple-touch-icon-114x114-precomposed.png', 'apple-touch-icon-152x152-precomposed.png', 'apple-touch-icon.png', 'favicon.ico', 'largetile.png', 'smalltile.png']
+  # filesToZip = ['apple-touch-icon-120x120-precomposed.png', 'apple-touch-icon-144x144-precomposed.png', 'mediumtile.png', 'widetile.png']
+  # filesToZip = ['apple-touch-icon.png', 'favicon.ico', 'largetile.png', 'smalltile.png']
+
+  output = fs.createWriteStream path.join(folderPath, 'website-icons.zip')
+  archive = archiver 'zip'
+
+  output.on 'close', () ->
+    console.log archive.pointer(), 'total bytes'
+    console.log 'archiver has been finalized and the output file descriptor has closed.'
+
+  archive.on 'error', (err)->
+    throw err
+
+  archive.pipe output
+
+  i = 0
+  icons.push path.join(folderPath, 'favicon.ico') # add regular ico
+  while i < icons.length
+    filesToZip.forEach (f, j)->
+      if icons[i] == path.join(folderPath, f)
+        console.log icons[i]
+        archive.append fs.createReadStream(icons[i]), name: path.basename(icons[i])
+    i++
+
+  archive.finalize()
+
+  return
+
+
   zip = new AdmZip()
   i = 0
   folderPath = path.normalize(folderPath)
+  icons.push path.join(folderPath, 'favicon.ico') # add regular ico
   while i < icons.length
-    zip.addLocalFile path.normalize(icons[i])
+    filesToZip.forEach (f, j)->
+      if icons[i] == path.join(folderPath, f)
+        console.log 'adding to zip:', icons[i]
+        zip.addLocalFile icons[i]
     i++
   zip.writeZip path.join(folderPath, 'website-icons.zip')
   return
+
+removeUnusedFiles = (folderPath, callback)->
+  filesDeleted = 0
+  filesToDelete = ['favicon64.ico', 'favicon48.ico', 'favicon32.ico', 'favicon24.ico', 'favicon16.ico']
+  fs.readdir folderPath, (err, files)->
+    files.forEach (file, index)->
+      fs.stat path.join(folderPath, file), (err, stat)->
+        return console.error err if err
+        filesToDelete.forEach (f, i)->
+          if f == file
+            fs.unlink path.join(folderPath, file), ()->
+              console.log 'file deleted'
+              if ++filesDeleted == filesToDelete.length then callback()
+

@@ -10,7 +10,7 @@ path = require 'path'
 fs = require 'fs'
 rimraf = require 'rimraf'
 CronJob = require('cron').CronJob
-EasyZip = require('easy-zip').EasyZip;
+redis = require 'redis'
 
 class IconCreator
 
@@ -23,8 +23,9 @@ class IconCreator
     @app.listen 3000, ()->
       console.log 'listening on port 3000'
       return
-    @initializeCronJobs()
-    @cleanUpUploadsFolder()
+    # @initializeCronJobs()
+    # @cleanUpUploadsFolder()
+    @initLogging()
     return
 
   ###
@@ -69,6 +70,7 @@ class IconCreator
         yuicompress: (process.env.NODE_ENV is 'production')
         compress: (process.env.NODE_ENV is 'production')
     @app.use express.static(path.join(__dirname, 'out'))
+    @app.use '/uploads', express.static(path.join(__dirname, 'uploads'))
     @app.use (req, res, next)->
       session = req.session
       messages = session.messages || (session.messages = [])
@@ -98,6 +100,14 @@ class IconCreator
     return
 
   ###
+  Logging
+  ###
+  initLogging: ()->
+    @client = redis.createClient()
+    @client.on "error", (err) ->
+      console.error "error event - " + @client.host + ":" + @client.port + " - " + err
+
+  ###
   Cleanup
   ###
   cleanUpUploadsFolder: ()->
@@ -115,15 +125,6 @@ class IconCreator
               console.log 'successfully deleted'
               return
           return
-
-  ###
-  Create Zip
-  ###
-  createZip: ()->
-    zip = new EasyZip()
-    iconFolder = zip2.folder('js')
-    iconFolder.file('hello.js','alert("hello world")')
-    zip.writeToFile('folder.zip')
 
 
   ###
@@ -144,11 +145,3 @@ ic = new IconCreator()
 ic.initialize()
 
 return
-
-zip = new EasyZip()
-# zip.file 'hello.txt','Hello World'
-zip.zipFolder path.join(__dirname,'uploads','ea8bafa8-b9d9-4c7a-a433-810bc19c9bfc'), (()->
-  console.log 'DONE DONE DONE'
-  zip.writeToFile path.join(__dirname,'test-2.zip')
-),
-  rootFolder: 'easy-zip6'

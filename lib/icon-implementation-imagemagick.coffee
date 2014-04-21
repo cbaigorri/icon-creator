@@ -3,6 +3,7 @@ IconImplementation
 ###
 
 im = require 'imagemagick'
+path = require 'path'
 
 exports.IconImplementation = IconImplementation = (iconDir, iconName)->
   # creation
@@ -20,13 +21,12 @@ IconImplementation.prototype =
     while i < imgs.length
       @drawIcon src, imgs[i], (iconPath)->
         totalDrawn++
-        icons.push iconPath
+        icons.push path.normalize(iconPath)
         callback(icons) if totalDrawn == totalImgs
       i++
     @
 
   drawIcon: (src, i, callback) ->
-    console.log i
     start = new Date
     fileType = src.substring(src.lastIndexOf('.') + 1, src.length)
     args =
@@ -37,7 +37,7 @@ IconImplementation.prototype =
       height: i.h
       srcFormat: fileType
       format: 'png'
-    if (i.w is 16 and i.h is 16)
+    if (i.format == 'ico')
       args.format = 'ico'
       # args.dstPath = @iconDir + '/' + @iconName + '' + i.w + 'x' + i.h + '.ico'
       args.dstPath = @iconDir + '/' + i.filename
@@ -45,4 +45,15 @@ IconImplementation.prototype =
       if (err) then console.error err
       console.log 'Resized and saved in %dms', new Date - start
       callback(args.dstPath)
+      return
+    @
+
+  createFavicon: (folder, icons, callback) ->
+    folder = path.normalize folder
+    start = new Date
+    im.convert [ path.join(folder, 'favicon16.ico'), path.join(folder, 'favicon24.ico'), path.join(folder, 'favicon32.ico'), path.join(folder, 'favicon48.ico'), path.join(folder, 'favicon64.ico'), path.join(folder, 'favicon.ico') ], (err, stdout) ->
+      return callback err if err
+      console.log 'Multires ico created and saved in %dms', new Date - start
+      callback()
+      return
     @

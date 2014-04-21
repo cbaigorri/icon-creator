@@ -32,6 +32,10 @@
     "node-uuid": "^1.4.1",
     "cron": "^1.0.4",
     "rimraf": "^2.2.6",
-    "adm-zip": "^0.4.4"
+    "adm-zip": "^0.4.4",
+    "node-syntaxhighlighter": "^0.8.1",
+    "highlight.js": "^8.0.0",
+    "archiver": "^0.8.1",
+    "redis": "^0.10.1"
   }
 }
